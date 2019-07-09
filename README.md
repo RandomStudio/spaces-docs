@@ -33,6 +33,12 @@ For example, a Kinect might use "Object 2D Tracker", "Object 3D Tracker", "Proxi
 
 For example, the "Electronics" Edge Node might include all of the Simple Sensor and Motor Control Interfaces, but which of these is actually enabled could be configured at runtime, from the server side.
 
+## Runtime Configuration
+
+On connection to the server, Edge Nodes should publish which **Interfaces** they implement. The Server should be able to enable (subscribe) or enable (unsubscribe) at the **Interface** and **Sender** level, and the Edge Node should prepare to send/receive these types of messages accordingly.
+
+In addition, Interfaces may optionally include standardised `set` type parameters, which controls the hardware or some part of the Edge Node software. These are expected to be used for **live control** or **preset configuration** so that the server can be the overriding "source of truth" for all Edge Node configuration.
+
 ## Interfaces
 
 The Interfaces below have been grouped, for convenience, into Interface Groups (though this is not part of the schema as such).
@@ -47,25 +53,31 @@ For **Event** Senders, it would make sense to provide a standard initialisation 
 
 #### Push Button
 * Senders
-    * "button_push"
+    * "button_push_events"
         * type: "event"
         * payload
             * none
-    * "button_stream"
+    * "button_push_stream"
         * type: "stream"
         * payload
             * newState: boolean (true = pushed)
+* Runtime Configuration
+    * `enable_sender button_push_events` true or false
+    * `enable_sender button_push_stream` true or false
 
 #### Toggle Switch
 * Senders
-    * "switch_toggle"
+    * "switch_toggle_events"
         * type: "event"
         * payload
             * newState: boolean (true = on, false = off)
-    * "switch_stream"
+    * "switch_toggle_stream"
         * type: "stream"
         * payload
             * currentState: boolean (true = on, false = off)
+* Runtime Configuration
+    * `enable_sender switch_toggle_events` true or false
+    * `enable_sender switch_toggle_stream` true or false
 
 ### INPUT: Tracking
 
@@ -83,15 +95,16 @@ In the Kinect example, it is clear that the Kinect hardware could provide at lea
             * `regionId` (optional; identifier for which ROI the object is inside - send multiple messages if overlapping regions?)
 * Receivers
     * *None*
-* Configuration Receivers
-    * "roi" (i.e. "region of interest"; optional; if not sent assume entire tracking region; send multiple with unique IDs to configure multiple ROIs)
+* Runtime Configuration
+    * `enable_sender object2d_position` true or false
+    * `set_ROI` (i.e. "region of interest"; optional; if not sent assume entire tracking region; send multiple with unique IDs to configure multiple ROIs)
         * `id`: int
         * `units`: enum string (what the meaning of the position values is): `mm`, `px`, `grid`
         * `min`:
             * `x`, `y`: floats (position of one corner)
         * `max`:
             * `x`, `y`: floats (position of other corner)
-    * "sizeThreshold"
+    * `set_sizeThreshold`
         * `min`
         * `max`
         * `type`: enum string `radius` (default?), `area`, `width`, `height`
