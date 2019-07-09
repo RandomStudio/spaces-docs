@@ -1,8 +1,10 @@
 # Reactive Spaces API
 
+See also [tech notes](./notes.md)
+
 ## Simple sensors
 
-Some of the simple sensors listed below could optionally provide either once-off "events" (only when their state changes) *or* a continuous stream of their current state. There needs to be a mechanism of disabling this altogether when not needed.
+Some of the simple sensors listed below could optionally provide either once-off "events" (only when their state changes) *or* a continuous stream of their current state. There needs to be a mechanism of disabling this altogether when not needed, to avoid waste of CPU resources and network bandwidth.
 
 Stream rates should be configurable where a framerate is not typically applicable, e.g. a button state.
 
@@ -54,4 +56,3 @@ In the Kinect example, it is clear that the Kinect hardware could provide at lea
         * `min`
         * `max`
         * `type`: enum string `radius` (default?), `area`, `width`, `height`
-        
