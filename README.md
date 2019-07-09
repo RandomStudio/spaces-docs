@@ -35,7 +35,7 @@ For example, the "Electronics" Edge Node might include all of the Simple Sensor 
 
 ## Runtime Configuration
 
-On connection to the server, Edge Nodes should publish which **Interfaces** they implement. The Server should be able to enable (subscribe) or enable (unsubscribe) at the **Interface** and **Sender** level, and the Edge Node should prepare to send/receive these types of messages accordingly.
+On connection to the server, Edge Nodes should publish which **Interfaces** they implement. The Server should be able to enable (subscribe) or enable (unsubscribe) down to the  **Sender** and/or **Receiver** level, and the Edge Node should prepare to send/receive these types of messages accordingly.
 
 In addition, Interfaces may optionally include standardised `set` type parameters, which controls the hardware or some part of the Edge Node software. These are expected to be used for **live control** or **preset configuration** so that the server can be the overriding "source of truth" for all Edge Node configuration.
 
