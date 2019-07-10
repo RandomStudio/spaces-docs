@@ -25,17 +25,16 @@ For example, a Kinect might use "Object 2D Tracker", "Object 3D Tracker", "Proxi
 
 * **Edge Node**, a standalone NodeJS process, which is hard-coded to use one or more
     * **Interface**, which enables (optionally, via runtime configuration) one or more
-        * **Senders** which could be either
+        * **Channels** (sending and receiving) which could be either
             * **Events** **...or**
             * Continous **Streams**
-        * **Receivers**
         * **Configuration Receivers**
 
 For example, the "Electronics" Edge Node might include all of the Simple Sensor and Motor Control Interfaces, but which of these is actually enabled could be configured at runtime, from the server side.
 
 ## Runtime Configuration
 
-On connection to the server, Edge Nodes should publish which **Interfaces** they implement. The Server should be able to enable (subscribe) or enable (unsubscribe) down to the  **Sender** and/or **Receiver** level, and the Edge Node should prepare to send/receive these types of messages accordingly.
+On connection to the server, Edge Nodes should publish which **Interfaces** they implement. The Server should be able to enable (subscribe) or enable (unsubscribe) down to the  **Channel** level, and the Edge Node should prepare to send/receive these types of messages accordingly. 
 
 In addition, Interfaces may optionally include standardised `set` type parameters, which controls the hardware or some part of the Edge Node software. These are expected to be used for **live control** or **preset configuration** so that the server can be the overriding "source of truth" for all Edge Node configuration.
 
@@ -49,10 +48,10 @@ Some of the simple sensors listed below could optionally provide either once-off
 
 Stream rates should be configurable where a framerate is not typically applicable, e.g. a button state.
 
-For **Event** Senders, it would make sense to provide a standard initialisation event on connection, to get initial state to the controller.
+For **Event** Channels, it would make sense to provide a standard initialisation event on connection, to get initial state to the controller.
 
 #### Push Button
-* Senders
+* Channels
     * "button_push_events"
         * type: "event"
         * payload
@@ -62,11 +61,11 @@ For **Event** Senders, it would make sense to provide a standard initialisation 
         * payload
             * newState: boolean (true = pushed)
 * Runtime Configuration
-    * `enable_sender button_push_events` true or false
-    * `enable_sender button_push_stream` true or false
+    * `enable_channel button_push_events` true or false
+    * `enable_channel button_push_stream` true or false
 
 #### Toggle Switch
-* Senders
+* Channels
     * "switch_toggle_events"
         * type: "event"
         * payload
@@ -76,8 +75,8 @@ For **Event** Senders, it would make sense to provide a standard initialisation 
         * payload
             * currentState: boolean (true = on, false = off)
 * Runtime Configuration
-    * `enable_sender switch_toggle_events` true or false
-    * `enable_sender switch_toggle_stream` true or false
+    * `enable_channel switch_toggle_events` true or false
+    * `enable_channel switch_toggle_stream` true or false
 
 ### INPUT: Tracking
 
@@ -86,7 +85,7 @@ This data could come from a spinning LIDAR sensor, for example, or a Kinect trac
 
 In the Kinect example, it is clear that the Kinect hardware could provide at least four different types of data: proximity/presence, 2D tracking, 3D tracking and fully-body (joint) tracking.
 
-* Senders
+* Channels
     * "object2d_position"
         * type: "stream"
         * payload
@@ -96,7 +95,7 @@ In the Kinect example, it is clear that the Kinect hardware could provide at lea
 * Receivers
     * *None*
 * Runtime Configuration
-    * `enable_sender object2d_position` true or false
+    * `enable_channel object2d_position` true or false
     * `set_ROI` (i.e. "region of interest"; optional; if not sent assume entire tracking region; send multiple with unique IDs to configure multiple ROIs)
         * `id`: int
         * `units`: enum string (what the meaning of the position values is): `mm`, `px`, `grid`
